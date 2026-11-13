@@ -1,0 +1,9 @@
+public class DataAccesException extends AppException {
+    public DataAccesException(String pesan, Throwable penyebab) {
+        super(pesan, penyebab);
+    }
+    @Override
+    public String pesanPengguna() {
+        return "Gagal menghubungi basis data. Hubungi petugas. (" + getMessage() + ")";
+    }
+}
