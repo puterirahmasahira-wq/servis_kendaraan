@@ -1,0 +1,16 @@
+package exception;
+
+/**induk seluruh kesalahan aplikasi. pemilik: koordinator Mutu. */
+public class  AppException extends Exception {
+    public AppException(String pesan) {
+        super(pesan);
+    }
+    public AppException(String pesan, Throwable penyebab) {
+        super(pesan, penyebab);
+    }
+    /** pesan yang ama ditampilkan kepada pengguna. */
+    public String pesanPengguna() {
+        return getMessage();
+    }
+
+}
