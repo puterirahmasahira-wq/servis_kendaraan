@@ -1,0 +1,129 @@
+package konsol;
+
+import exception.AppException;
+import model.Pelanggan;
+
+import java.util.List;
+import java.util.Scanner;
+
+public class MenuPelanggan {
+
+    private static final Scanner MASUK = new Scanner(System.in);
+    private static final PelangganKonsol DATA = new PelangganKonsol();
+
+    public static void main(String[] args) {
+        int pilihan;
+        do {
+            tampilkanMenu();
+            pilihan = bacaPilihan();
+            switch (pilihan) {
+                case 1: tambah(); break;
+                case 2: tampilkanSemua(); break;
+                case 3: cari(); break;
+                case 4: ubah(); break;
+                case 5: hapus(); break;
+                case 0: System.out.println("Keluar."); break;
+                default: System.out.println("Pilihan tidak dikenal.");
+            }
+        } while (pilihan != 0);
+    }
+
+    private static void tampilkanMenu() {
+        System.out.println();
+        System.out.println("=== Servis Kendaraan - Data Pelanggan ===");
+        System.out.println("1. Tambah");
+        System.out.println("2. Tampilkan semua");
+        System.out.println("3. Cari berdasarkan telepon");
+        System.out.println("4. Ubah");
+        System.out.println("5. Hapus");
+        System.out.println("0. Keluar");
+        System.out.print("Pilihan: ");
+    }
+
+    private static int bacaPilihan() {
+        try {
+            return Integer.parseInt(MASUK.nextLine().trim());
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    private static void tambah() {
+        System.out.print("Nama: ");
+        String nama = MASUK.nextLine().trim();
+        System.out.print("Telepon: ");
+        String telepon = MASUK.nextLine().trim();
+        System.out.print("Alamat: ");
+        String alamat = MASUK.nextLine().trim();
+        try {
+            Pelanggan p = new Pelanggan(nama, telepon, alamat);
+            DATA.simpan(p);
+            System.out.println("Tersimpan dengan id " + p.getId() + ".");
+        } catch (AppException e) {
+            System.out.println(e.pesanPengguna());
+        }
+    }
+
+    private static void tampilkanSemua() {
+        try {
+            List<Pelanggan> semua = DATA.ambilSemua();
+            System.out.println("Jumlah baris: " + semua.size());
+            for (Pelanggan p : semua) {
+                System.out.println(p.label());
+            }
+        } catch (AppException e) {
+            System.out.println(e.pesanPengguna());
+        }
+    }
+
+    private static void cari() {
+        System.out.print("Telepon yang dicari: ");
+        String telepon = MASUK.nextLine().trim();
+        try {
+            Pelanggan p = DATA.cariTelepon(telepon);
+            System.out.println(p != null ? p.label() : "Tidak ditemukan.");
+        } catch (AppException e) {
+            System.out.println(e.pesanPengguna());
+        }
+    }
+
+    private static void ubah() {
+        System.out.print("Telepon yang diubah: ");
+        String telepon = MASUK.nextLine().trim();
+        try {
+            Pelanggan p = DATA.cariTelepon(telepon);
+            if (p == null) {
+                System.out.println("Tidak ada pelanggan dengan telepon itu.");
+                return;
+            }
+            System.out.print("Nama baru [" + p.getNama() + "]: ");
+            String nama = MASUK.nextLine().trim();
+            if (!nama.isEmpty()) {
+                p.setNama(nama);
+            }
+            System.out.print("Alamat baru [" + p.getAlamat() + "]: ");
+            String alamat = MASUK.nextLine().trim();
+            if (!alamat.isEmpty()) {
+                p.setAlamat(alamat);
+            }
+            System.out.println(DATA.ubah(p) ? "Satu baris diubah." : "Tidak ada baris yang berubah.");
+        } catch (AppException e) {
+            System.out.println(e.pesanPengguna());
+        }
+    }
+
+    private static void hapus() {
+        System.out.print("Telepon yang dihapus: ");
+        String telepon = MASUK.nextLine().trim();
+        try {
+            Pelanggan p = DATA.cariTelepon(telepon);
+            if (p == null) {
+                System.out.println("Tidak ada pelanggan dengan telepon itu.");
+                return;
+            }
+            System.out.println(DATA.hapus(p.getId()) ? "Satu baris dihapus." : "Tidak ada baris yang dihapus.");
+        } catch (AppException e) {
+            System.out.println(e.pesanPengguna());
+        }
+    }
+}
