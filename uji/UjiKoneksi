@@ -1,0 +1,14 @@
+package uji;
+
+import db.Koneksi;
+
+public class UjiKoneksi {
+    public static void main(String[] args) {
+        try {
+            Koneksi.buka();
+            System.out.println("Koneksi berhasil!");
+        } catch (Exception e) {
+            System.out.println("Gagal: " + e.getMessage());
+        }
+    }
+}
